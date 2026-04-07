@@ -248,8 +248,7 @@ def create_series(arr):
   return series
 
 def clean_data(series):
-  series.dropna()
-  return series
+  return series.dropna()
 
 def summarize_data(series):
   dict = {}
@@ -267,3 +266,7 @@ def data_pipeline(arr):
 
 for key, value in data_pipeline(arr).items():
   print(f"{key}: {value:.3f}")
+
+#This is more overhead because for processing the small data, it takes more time and resources than actual processing.
+
+#Prefect becomes useful when data requires automatic update, a scheduled scripting or a visual dashboard.
