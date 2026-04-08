@@ -35,4 +35,8 @@ if __name__ == "__main__":
     print(f"{key}: {value:.3f}")
 
 
-#
+#Q: Why might Prefect be more overhead than it is worth here?
+#A: This is more work than intended, because we only need to call 3 functions as there is no need for automation.
+
+#Q: Describe some realistic scenarios where a framework like Prefect could still be useful, even if the pipeline logic itself stays simple like in this case.
+#A: Prefect is useful when the pipeline needs a scheduled run repetitively or requires retrying any errors or logging them.

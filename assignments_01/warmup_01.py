@@ -157,8 +157,8 @@ data2 = [10, 12, 12, 16, 150]
 
 print(f"data1's mean: {np.mean(data1)}\n")
 print(f"data1's median: {np.median(data1)}\n")
-print(f"data1's mean: {np.mean(data2)}\n")
-print(f"data1's median: {np.median(data2)}\n")
+print(f"data2's mean: {np.mean(data2)}\n")
+print(f"data2's median: {np.median(data2)}\n")
 
 #Q: Why are the median and mean so different for data2?
 #A: Because data2 is screwed to the right, compared to data1.
