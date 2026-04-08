@@ -25,7 +25,7 @@ def load_data():
   result_df = result_df.dropna()
   result_df.columns = result_df.columns.str.lower()
   result_df.columns = result_df.columns.str.replace(' ', '_')
-  logger.info(f'{len(result_df['year'].unique())} total number years and {len(result_df['country'].unique())} total number of countries')
+  logger.info(f'{len(result_df["year"].unique())} total number years and {len(result_df["country"].unique())} total number of countries')
   result_df.to_csv("./outputs/merged_happiness.csv", index=False)
   logger.info("Data has been merged and saved successfully!")
   return result_df
@@ -108,6 +108,7 @@ def hypothesize(df):
       logger.info("The difference in happiness score between Western Europe region and Sub-Saharan African in 2020 is not statistically significant and likely due to chance.")
 
 # Task 5: Correlation and Multiple Comparisons
+@task(retries=3, retry_delay_seconds=2)
 def correlate(df):
    logger = get_run_logger()
    numeric_columns = df.select_dtypes(include=np.number).columns
