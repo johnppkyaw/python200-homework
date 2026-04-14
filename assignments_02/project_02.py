@@ -50,15 +50,15 @@ print(df_clean)
 print(df[['absences', 'G3']].corr())
 print(df_clean[['absences', 'G3']].corr())
 
-# plt.scatter(df['absences'], df['G3'], color='red')
-# plt.xlabel('absences')
-# plt.ylabel('G3')
-# plt.show()
+plt.scatter(df['absences'], df['G3'], color='red')
+plt.xlabel('absences')
+plt.ylabel('G3')
+plt.show()
 
-# plt.scatter(df_clean['absences'], df_clean['G3'], color='blue')
-# plt.xlabel('absences')
-# plt.ylabel('G3')
-# plt.show()
+plt.scatter(df_clean['absences'], df_clean['G3'], color='blue')
+plt.xlabel('absences')
+plt.ylabel('G3')
+plt.show()
 
 #Q: What were students with G3=0 doing in the original data that made absences look like a weak predictor? You might want to explore scatter plots to help understand this.
 
