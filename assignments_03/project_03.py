@@ -110,7 +110,7 @@ for i in range(3):
   plt.savefig(f'./outputs/boxplot_of_{feature}.png')
   plt.close()
 
-print(df['word_freq_free'].describe)
+print(df['word_freq_free'].describe())
 
 #It's heavily skewed to zero because most values are zero.  The features are measured in completely different units, which causes different ranges.  Because of these the models will likely be biased on the data unless we scaled the data first.
 
