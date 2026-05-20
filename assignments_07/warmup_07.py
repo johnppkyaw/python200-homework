@@ -65,7 +65,7 @@ tools = [
         },
     }
 ]
-print('Tools list defined with one tool: celsius_to_fahrenheit')
+print("Tools list defined with two tools: celsius_to_fahrenheit and get_current_time")
 print(celsius_to_fahrenheit(0))
 print(celsius_to_fahrenheit(100))
 print(celsius_to_fahrenheit(-40))
@@ -74,7 +74,7 @@ print(celsius_to_fahrenheit(-40))
 #Q: Will calling run_agent("Convert 100 degrees Celsius to Fahrenheit") trigger a tool call? Why or why not?
 #A: Calling run_agent will trigger a tool call because of the system_prompt but since the condition has not set up to run the celsius_to_fahrenheit function yet, it will respond with unknown tool.
 
-#Q: How many API calls will be made to answer this query? 2 because it could not use the tool.
+#Q: How many API calls will be made to answer this query? 2; the first call allows the model to analyze the prompt and choose to execute the tool. The second call takes the tool's output and uses it to finalize the final answer for the user.
 
 def run_agent(user_prompt: str) -> str:
     '''Run a minimal ReAct-style agent for a single user prompt.'''
@@ -90,7 +90,7 @@ def run_agent(user_prompt: str) -> str:
 
     # Step 2: first API call - the model decides whether to call a tool
     first_response = client.chat.completions.create(
-        model='gpt-4.1-mini',
+        model='gpt-4o-mini',
         messages=messages,
         tools=tools,
         tool_choice='auto',  # model chooses whether to use a tool

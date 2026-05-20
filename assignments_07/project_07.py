@@ -144,7 +144,7 @@ def get_top_n_countries(column: str, year: int, n: int = 5) -> dict:
         
         # Format output as a list of dicts with just country and the chosen column
         results = top_n[['country', column]].to_dict(orient='records')
-        return {"top_countries": results}
+        return results
     except Exception as e:
         return {"error": f"Failed to retrieve top countries: {str(e)}"}
 
