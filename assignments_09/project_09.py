@@ -32,9 +32,9 @@ blob_path = f"raw/{today}/weather.json"
 
 credential = DefaultAzureCredential()
 container = ContainerClient(
-    account_url= ACCOUNT_URL,
-    container_name="CONTAINER",
-    credential=credential
+    account_url = ACCOUNT_URL,
+    container_name = CONTAINER,
+    credential = credential
 )
 
 container.upload_blob(blob_path, payload, overwrite=True)
