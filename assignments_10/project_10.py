@@ -1,8 +1,7 @@
-#Video demo link: https://www.youtube.com/watch?v=bqas5TOmhaE
+#Video demo link: https://www.youtube.com/watch?v=t6zQ4JVPqUE
 
 from azure.storage.blob import ContainerClient
 from azure.identity import DefaultAzureCredential
-import requests
 import json
 from datetime import date
 import pandas as pd
@@ -26,8 +25,13 @@ def main():
   credential = DefaultAzureCredential()
   container = ContainerClient(ACCOUNT_URL, CONTAINER, credential=credential)
 
-  raw = container.download_blob(blob_path).readall()
-  data = json.loads(raw.decode("utf-8"))
+  try:
+      print(f"Attempting to download blob from: {blob_path}")
+      raw = container.download_blob(blob_path).readall()
+      data = json.loads(raw.decode("utf-8"))
+      print("Successfully loaded data from Azure Blob Storage.")
+  except Exception as e:
+      print(f"\n[WARNING] Could not load blob from Azure: {e}")
 
   # Reshape from parallel lists into a list of records
   hourly = data["hourly"]
@@ -40,7 +44,7 @@ def main():
       }
       records.append(record)
 
-  print(f"Loaded {len(records)} hourly records")
+  print(f"Loaded {len(records)} hourly records total.")
 
   #Step 2: Transform
   SYSTEM_PROMPT = (
@@ -55,9 +59,21 @@ def main():
           f"Temperature: {record['temperature_2m']}C, "
           f"Precipitation: {record['precipitation']}mm"
       )
+  
+  # Restrict evaluation to exactly 24 records (1 full day of data)
+  records_to_process = records[:24]
+  total_to_process = len(records_to_process)
 
   enriched = []
-  for record in records:
+  valid_labels = {"good", "marginal", "bad"}
+
+  print(f"\nStarting transformation for {total_to_process} records.")
+
+  for i, record in enumerate(records_to_process):
+      # Progress updates logged at intervals of every 6 rows handled
+      if (i + 1) % 6 == 0:
+          print(f"Processing record {i + 1}/{total_to_process}...")
+
       response = client.chat.completions.create(
           model="gpt-4o-mini",
           messages=[
@@ -65,9 +81,18 @@ def main():
               {"role": "user", "content": make_user_message(record)},
           ]
       )
+      
+      # Clean up output string format
       label = response.choices[0].message.content.strip().lower()
+      
+      # Strict structural guard: drop unstructured outputs down to 'unknown'
+      if label not in valid_labels:
+          label = "unknown"
+          
       enriched_record = {**record, "conditions": label}
       enriched.append(enriched_record)
+
+  print("Transformation sequence complete.")
 
   #Step 3: Write
   #Upload the enriched records (with the new "conditions" field) to processed/<today>/weather_classified.json in Blob Storage. Use overwrite=True.
@@ -90,8 +115,8 @@ def main():
   file_path = "./outputs/first_10_records.json"
   enriched_json = json.dumps(enriched[:10]).encode("utf-8")
   os.makedirs("outputs", exist_ok=True)
-  with open(file_path, "wb") as f:
-      f.write(enriched_json)
+  with open(file_path, "w", encoding="utf-8") as f:
+      json.dump(enriched[:10], f, indent=4)
   print(f"Successfully saved JSON to {file_path}")
 
 if __name__ == "__main__":
