@@ -1,5 +1,5 @@
 from prefect import task
-from prefect.logging import get_run_logger
+from prefect import get_run_logger
 
 # --- Prefect Orchestration ---
 

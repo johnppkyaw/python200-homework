@@ -87,7 +87,7 @@ def transform(data: dict, max_records: int) -> list:
 
 #The Load Task
 @task
-def load(records: list) -> None:
+def load(records: list) -> str:
     credential = DefaultAzureCredential()
 
     container = ContainerClient(
